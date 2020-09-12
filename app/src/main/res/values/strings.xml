@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Guest Houses</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="details">Notepad++ is one of the most common editors that developers use to type a code in.
+        Atom was created by GitHub platform and is free of charge to be used.
+        Sublime Text 3 is a cross-platform text editor that supports most of the programming
+        languages and has Syntax Highlighting.</string>
+</resources>

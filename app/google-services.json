@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "180338444173",
+    "firebase_url": "https://kotalishious-dff22.firebaseio.com",
+    "project_id": "kotalishious-dff22",
+    "storage_bucket": "kotalishious-dff22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:180338444173:android:ba0b5c9924e661bb39dfc4",
+        "android_client_info": {
+          "package_name": "com.example.guesthouses"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "180338444173-gnvqpsaip2m6mcujl0uncj4kdslu7jtb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.guesthouses",
+            "certificate_hash": "c56151ffd1c1700a7058da746e637e867dc110ee"
+          }
+        },
+        {
+          "client_id": "180338444173-fl68hpnf11rugo31mf62tbb04s33h2l9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCa4N6DJQa0T0NT_70xXq6v4s6e9bS_0DE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "180338444173-fl68hpnf11rugo31mf62tbb04s33h2l9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
