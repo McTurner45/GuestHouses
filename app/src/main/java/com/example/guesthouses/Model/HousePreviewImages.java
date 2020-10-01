@@ -2,20 +2,23 @@ package com.example.guesthouses.Model;
 
 public class HousePreviewImages {
 
-    String guestHouseName;
+    String guestHouseId;
     String imageUrl;
 
     public HousePreviewImages(String guestHouseName, String imageUrl) {
-        this.guestHouseName = guestHouseName;
+        this.guestHouseId = guestHouseName;
         this.imageUrl = imageUrl;
     }
 
-    public String getGuestHouseName() {
-        return guestHouseName;
+    public HousePreviewImages() {
     }
 
-    public void setGuestHouseName(String guestHouseName) {
-        this.guestHouseName = guestHouseName;
+    public String getGuestHouseId() {
+        return guestHouseId;
+    }
+
+    public void setGuestHouseId(String guestHouseId) {
+        this.guestHouseId = guestHouseId;
     }
 
     public String getImageUrl() {

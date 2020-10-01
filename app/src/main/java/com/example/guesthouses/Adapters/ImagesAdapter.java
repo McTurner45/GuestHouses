@@ -41,7 +41,6 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
         HousePreviewImages housePreviewImages= list.get(position);
 
         Glide.with(mContext).load(housePreviewImages.getImageUrl()).into(holder.imageView);
-
     }
 
     @Override
@@ -56,7 +55,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            itemView= imageView.findViewById(R.id.guest_house_images);
+            imageView= itemView.findViewById(R.id.guest_house_images);
         }
     }
 }

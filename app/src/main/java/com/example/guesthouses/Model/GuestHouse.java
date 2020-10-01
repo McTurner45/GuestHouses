@@ -1,7 +1,5 @@
 package com.example.guesthouses.Model;
 
-import java.util.ArrayList;
-
 public class GuestHouse {
 
     private String name;
@@ -23,6 +21,9 @@ public class GuestHouse {
         this.phone = phone;
         this.description = description;
         this.houseId = houseId;
+    }
+
+    public GuestHouse() {
     }
 
     public String getName() {

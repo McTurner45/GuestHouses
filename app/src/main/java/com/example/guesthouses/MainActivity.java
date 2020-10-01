@@ -7,10 +7,12 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,6 +20,8 @@ import android.widget.Toast;
 import com.example.guesthouses.Adapters.GuestHouseAdapter;
 import com.example.guesthouses.Adapters.SearchAdapter;
 import com.example.guesthouses.Model.GuestHouse;
+import com.example.guesthouses.Model.HousePreviewImages;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -42,17 +47,10 @@ public class MainActivity extends AppCompatActivity {
     GuestHouseAdapter houseAdapter;
     SearchAdapter searchAdapter;
 
-    ArrayList<GuestHouse> houses, list;
-
-    EditText searchHouse;
+    ArrayList<GuestHouse> houses;
 
     androidx.appcompat.widget.SearchView searchView;
 
-    Button button;
-
-    GuestHouse house;
-
-    final static int image_picked = 1;
 
     private StorageReference mStorageRef;
 
@@ -64,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
         vertical = findViewById(R.id.recyclerview_vertical);
 
-        button = findViewById(R.id.add);
         horizontal = findViewById(R.id.recyclerview_horizontal);
         searchView = findViewById(R.id.search_bar);
 
@@ -75,53 +72,17 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-        reference = firebaseDatabase.getReference("guesthouses").child("houses");
+        reference = firebaseDatabase.getReference("guesthouses");
 
         mStorageRef = FirebaseStorage.getInstance().getReference().child("HouseImages");
 
-        GuestHouse house= new GuestHouse("9873297362378","Bahumi", "100", "Gabs"
-                , "5", "Default", "77000826", "default");
-
-
         getData();
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveImages();
-            }
-        });
-
-    }
-
-    private void saveData() {
-
-        firebaseDatabase = FirebaseDatabase.getInstance();
-
-        reference = firebaseDatabase.getReference("guesthouses").child("houses");
-
-        house= new GuestHouse("9873297362378","Bahumi", "100", "Gabs"
-                , "5", "Default", "77000826", "default");
-
-        reference.push().setValue(house);
-    }
-
-    private void saveImages() {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-
-        reference = firebaseDatabase.getReference("guesthouses").child("houses");
-
-        Intent getImageIntent = new Intent();
-
-        getImageIntent.setAction(Intent.ACTION_GET_CONTENT);
-        getImageIntent.setType("images/*");
-        startActivityForResult(getImageIntent, image_picked);
 
     }
 
     public void getData() {
 
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.child("houses").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -130,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                     if (dataSnapshot.exists()) {
                         GuestHouse house = dataSnapshot.getValue(GuestHouse.class);
                         houses.add(house);
+
                     }
                 }
 
@@ -179,37 +141,4 @@ public class MainActivity extends AppCompatActivity {
         vertical.setAdapter(searchAdapter);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == image_picked && resultCode == RESULT_OK && data != null) {
-
-            Uri imageUrl = data.getData();
-
-            CropImage.activity()
-                    .setGuidelines(CropImageView.Guidelines.ON)
-                    .setAspectRatio(1, 1)
-                    .start(this);
-
-        }
-
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-
-            if (requestCode == RESULT_OK) {
-                Uri resultUri = result.getUri();
-                StorageReference filePath= mStorageRef.child(house.getHouseId() + ".jpg");
-
-                filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if (task.isSuccessful()){
-                            final String downloadUrl = task.getResult().getUploadSessionUri().toString();
-                        }
-                    }
-                });
-            }
-        }
-    }
 }

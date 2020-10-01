@@ -2,8 +2,6 @@ package com.example.guesthouses;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,8 +14,6 @@ import android.widget.TextView;
 
 import com.example.guesthouses.Adapters.ImagesAdapter;
 import com.example.guesthouses.Adapters.TabAdapter;
-import com.example.guesthouses.Fragments.Details;
-import com.example.guesthouses.Fragments.Reviews;
 import com.example.guesthouses.Model.HousePreviewImages;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class HouseDetails extends AppCompatActivity {
 
@@ -43,13 +40,15 @@ public class HouseDetails extends AppCompatActivity {
 
     RecyclerView houseImages;
 
-    ArrayList<HousePreviewImages> list;
+    List<HousePreviewImages> list;
 
     ImagesAdapter imagesAdapter;
 
     FirebaseDatabase firebaseDatabase;
 
     DatabaseReference reference;
+
+    String guestHouseId, out;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +62,9 @@ public class HouseDetails extends AppCompatActivity {
         gH_phone = findViewById(R.id.house_phone);
 
         houseImages = findViewById(R.id.guest_house_image);
-
         firebaseDatabase = FirebaseDatabase.getInstance();
+
+        reference = firebaseDatabase.getReference("guesthouses");
 
         houseImages.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -74,10 +74,6 @@ public class HouseDetails extends AppCompatActivity {
 
         list = new ArrayList<>();
 
-        imagesAdapter = new ImagesAdapter(this, list);
-
-        houseImages.setAdapter(imagesAdapter);
-
         Intent intent = getIntent();
 
         gH_name.setText(intent.getStringExtra("gH_name"));
@@ -85,8 +81,10 @@ public class HouseDetails extends AppCompatActivity {
         gH_location.setText(intent.getStringExtra("gH_location"));
         gH_rating.setText(intent.getStringExtra("gH_rating"));
         gH_phone.setText(intent.getStringExtra("gH_phone"));
+        guestHouseId=intent.getStringExtra("gH_id");
 
-        getImages(intent.getStringExtra("gH_images"));
+
+        getImages(guestHouseId);
 
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
@@ -120,22 +118,21 @@ public class HouseDetails extends AppCompatActivity {
     }
 
     public void getImages(final String houseName) {
-        reference=firebaseDatabase.getReference("HouseImages");
-
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.child("previewimages").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                     HousePreviewImages housePreviewImages= dataSnapshot.getValue(HousePreviewImages.class);
 
-                    if (housePreviewImages.getGuestHouseName().equals(houseName)){
-                        list.add(housePreviewImages);
-                    }
+                    if (housePreviewImages.getGuestHouseId().equals(houseName)){
+                    list.add(housePreviewImages);
                 }
+            }
 
-                Collections.reverse(list);
+                imagesAdapter = new ImagesAdapter(getApplicationContext(), list);
                 imagesAdapter.notifyDataSetChanged();
+                houseImages.setAdapter(imagesAdapter);
             }
 
             @Override
@@ -144,5 +141,11 @@ public class HouseDetails extends AppCompatActivity {
             }
         });
 
+    }
+
+    public Bundle getMyData() {
+        Bundle hm = new Bundle();
+        hm.putString("houseId",guestHouseId);
+        return hm;
     }
 }

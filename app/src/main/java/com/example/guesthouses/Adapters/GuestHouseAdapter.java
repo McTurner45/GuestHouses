@@ -59,6 +59,8 @@ public class GuestHouseAdapter extends RecyclerView.Adapter<GuestHouseAdapter.Vi
                 intent.putExtra("gH_rating", guestHouse.getRating());
                 intent.putExtra("gH_location", guestHouse.getLocation());
                 intent.putExtra("gH_name", guestHouse.getName());
+                intent.putExtra("gH_id", guestHouse.getHouseId());
+                intent.putExtra("gH_description", guestHouse.getDescription());
                 v.getContext().startActivity(intent);
             }
         });
